@@ -1,4 +1,4 @@
-package org.example.model;
+package org.example.model.model1;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,14 +8,15 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
-@Table(name = "users")
+@Table(name = "clients")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
-public class User {
+public class Client {
 
     private String name;
     @Id
@@ -27,14 +28,7 @@ public class User {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate birth;
 
-    @OneToOne(mappedBy = "user")
-    private Passport passport;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_id")
-    private Group group;
+    @OneToMany(mappedBy = "client")
+    private List<Order> orders;
 
 }
-
-// JPA - Operations
-// Hybernet - трансляция
