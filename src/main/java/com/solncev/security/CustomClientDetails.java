@@ -1,6 +1,6 @@
 package com.solncev.security;
 
-import com.solncev.model.User;
+import com.solncev.model.Client;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,25 +11,25 @@ import java.util.Collection;
 import java.util.List;
 
 @AllArgsConstructor
-public class CustomUserDetails implements UserDetails {
+public class CustomClientDetails implements UserDetails {
 
-    private User user;
+    private Client client;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        user.getRoles().forEach(r-> authorities.add(new SimpleGrantedAuthority(r.getName())));
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER")); // добавляем роль пользователя
         return authorities;
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return client.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.getEmail();
+        return client.getEmail();
     }
 
     @Override
@@ -52,3 +52,4 @@ public class CustomUserDetails implements UserDetails {
         return true;
     }
 }
+
