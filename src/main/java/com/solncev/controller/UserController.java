@@ -2,9 +2,13 @@ package com.solncev.controller;
 
 import com.solncev.dto.CreateUserRequestDto;
 import com.solncev.dto.UserResponseDto;
+import com.solncev.model.Client;
+import com.solncev.security.CustomClientDetails;
 import com.solncev.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;

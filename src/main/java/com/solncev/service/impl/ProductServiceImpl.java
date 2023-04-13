@@ -20,6 +20,8 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.getByName(name);
     }
 
+    public List<Product> findAll() { return productRepository.findAll(); }
+
     @Override
     public List<Product> getByNameStartsWith(String name) {
         return productRepository.getByNameStartsWith(name);

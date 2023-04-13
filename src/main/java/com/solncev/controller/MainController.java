@@ -2,6 +2,9 @@ package com.solncev.controller;
 
 import com.solncev.dto.CreateClientRequestDto;
 import com.solncev.dto.CreateUserRequestDto;
+import com.solncev.model.Client;
+import com.solncev.security.CustomClientDetails;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

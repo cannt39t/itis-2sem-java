@@ -7,15 +7,20 @@ import com.solncev.model.Category;
 import com.solncev.model.Client;
 import com.solncev.model.Order;
 import com.solncev.model.Product;
+import com.solncev.security.CustomClientDetails;
 import com.solncev.service.impl.CategoryServiceImpl;
 import com.solncev.service.impl.ClientServiceImpl;
 import com.solncev.service.impl.OrderServiceImpl;
 import com.solncev.service.impl.ProductServiceImpl;
 import lombok.AllArgsConstructor;
 
+import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -34,10 +39,18 @@ public class ShopController {
     }
 
     @PostMapping("/client/create")
-    public String createClient(@ModelAttribute CreateClientRequestDto client) {
-        clientService.create(client);
+    public String createClient(@ModelAttribute CreateClientRequestDto client, HttpServletRequest request) {
+        String url = request.getRequestURL().toString().replace(request.getServletPath(), "");
+        clientService.create(client, url);
         return "sign_up_success";
     }
+
+//    @PostMapping("/user")
+//    public String createUser(@ModelAttribute CreateUserRequestDto user, HttpServletRequest request) {
+//        String url = request.getRequestURL().toString().replace(request.getServletPath(), "");
+//        userService.create(user, url);
+//        return "sign_up_success";
+//    }
 
     @ResponseBody
     @GetMapping("/client/{id}")
@@ -63,12 +76,6 @@ public class ShopController {
     }
 
     @ResponseBody
-    @GetMapping("/shop/orders/{user_id}")
-    public List<Order> getOrdersOfUserWithId(@PathVariable Integer user_id) {
-        return orderService.getAllByClientId(user_id);
-    }
-
-    @ResponseBody
     @GetMapping("/shop/order/{user_id}")
     public Order getOrderById(@PathVariable Integer user_id) {
         return orderService.getOrderById(user_id);
@@ -84,6 +91,35 @@ public class ShopController {
     @GetMapping("/shop/products/{name}")
     public List<Product> getProductsByName(@PathVariable String name) {
         return productService.getByNameStartsWith(name);
+    }
+
+    @GetMapping("/orders")
+    public String getOrdersOfUserWithId(@AuthenticationPrincipal CustomClientDetails customClientDetails, Model model) {
+        String name = customClientDetails.getUsername();
+        Client client = clientService.getClientByName(name);
+        List<Order> orders = orderService.getAllByClientId(client.getId());
+        System.out.println(orders);
+        model.addAttribute("orders", orders);
+        return "orders";
+    }
+
+    @GetMapping("/profile")
+    public String showProfilePage(@AuthenticationPrincipal CustomClientDetails customClientDetails, Model model) {
+        String name = customClientDetails.getUsername();
+        Client client = clientService.getClientByName(name);
+        ClientResponseDto clientResponse = ClientResponseDto.fromEntity(client);
+        model.addAttribute("client", clientResponse);
+        return "personal_cabinet";
+    }
+
+    @GetMapping("/verification")
+    public String verifaction(@Param("code") String code) {
+        System.out.println("Verify");
+        if (clientService.verify(code)) {
+            return "verification_success";
+        } else {
+            return "verification_failed";
+        }
     }
 
 }

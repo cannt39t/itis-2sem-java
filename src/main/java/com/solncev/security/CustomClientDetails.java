@@ -51,5 +51,6 @@ public class CustomClientDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }
 

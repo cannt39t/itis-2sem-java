@@ -24,4 +24,11 @@ public class Order {
 
     @OneToMany(mappedBy = "order")
     private List<Product> products;
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                '}';
+    }
 }
